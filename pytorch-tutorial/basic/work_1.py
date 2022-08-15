@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision.datasets
 import torchvision.transforms as transforms
+import matplotlib.pyplot as plt
 
 # device config
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -10,7 +11,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 input_size = 784
 hidden_size = 500
 num_classes = 10
-num_epochs = 5
+num_epochs = 6
 batch_size = 100
 learning_rate = 0.01
 
@@ -34,12 +35,14 @@ class NeuralNet(nn.Module):
         super(NeuralNet, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.relu = nn.ReLU()
+        self.fc = nn.Linear(hidden_size, hidden_size)
         self.fc2 = nn.Linear(hidden_size, num_classes)
 
     def forward(self, x):
         loop0 = self.fc1(x)
         loop1 = self.relu(loop0)
-        out = self.fc2(loop1)
+        loop2 = self.fc(loop1)
+        out = self.fc2(loop2)
         return out
 
 
@@ -51,6 +54,8 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
 # Train and model
 total_step = len(train_loader)
+costs = []
+index = []
 for epoch in range(num_epochs):
     for i, (images, labels) in enumerate(train_loader):
         images = images.reshape(-1, 28 * 28).to(device)
@@ -64,7 +69,9 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-
+        if i % 100 == 0:
+            costs.append(loss.item())
+            index.append(epoch * total_step + i)
         if (i + 1) % 100 == 0:
             print('Epoch [{}/{}], Step [{}/{}], loss:{:.4f}'
                   .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
@@ -84,6 +91,10 @@ with torch.no_grad():
         correct += (predicted == labels).sum().item()
 
     print('Accuracy of the network on the 10000 test images: {} %'.format(100 * correct / total))
+
+plt.scatter(index, costs)
+plt.show()
+
 
 # Save the model checkpoint
 torch.save(model.state_dict(), 'model.ckpt')
