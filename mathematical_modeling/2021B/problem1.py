@@ -84,7 +84,7 @@ def fit_data(all_eth, all_c4):
     predict_data = [i for i in range(200, 451, 10)]
     predict_data = np.array(predict_data).reshape(-1, 1)
     degree = 2
-    plt.subplots_adjust(wspace=0.8, hspace=0.8)  # 调整子图间距
+    # plt.subplots_adjust(wspace=0.8, hspace=0.8)
     for i in range(n):
         # degree代表最高次数
         clf = Pipeline([('poly', PolynomialFeatures(degree=degree)),
@@ -92,49 +92,53 @@ def fit_data(all_eth, all_c4):
         if i < 2:
             clf.fit(np.array(temperatures_1to2).reshape(-1, 1), np.array(all_eth[i]).reshape(-1, 1))
             y_pre = clf.predict(predict_data)
-            plt.subplot(5, 5, i+1)
+            # plt.subplot(5, 5, i+1)
             plt.scatter(temperatures_1to2, all_eth[i], c='red')
             plt.plot(predict_data, y_pre, c='blue')
             plt.xlabel("温度", fontsize=10)
             plt.ylabel("乙醇转化率", fontsize=10)
             plt.title(str(data_name[i]) + " C4烯烃选择性与温度的关系", fontsize=10)
+            plt.show()
         elif i < 3:
             clf.fit(np.array(temperatures_3).reshape(-1, 1), np.array(all_eth[i]).reshape(-1, 1))
             y_pre = clf.predict(predict_data)
-            plt.subplot(5, 5, i + 1)
+            # plt.subplot(5, 5, i + 1)
             plt.scatter(temperatures_3, all_eth[i], c='red')
             plt.plot(predict_data, y_pre, c='blue')
             plt.xlabel("温度", fontsize=10)
             plt.ylabel("乙醇转化率", fontsize=10)
             plt.title(str(data_name[i]) + " C4烯烃选择性与温度的关系", fontsize=10)
+            plt.show()
         elif i < 5:
             clf.fit(np.array(temperatures_4to5).reshape(-1, 1), np.array(all_eth[i]).reshape(-1, 1))
             y_pre = clf.predict(predict_data)
-            plt.subplot(5, 5, i + 1)
+            # plt.subplot(5, 5, i + 1)
             plt.scatter(temperatures_4to5, all_eth[i], c='red')
             plt.plot(predict_data, y_pre, c='blue')
             plt.xlabel("温度", fontsize=10)
             plt.ylabel("乙醇转化率", fontsize=10)
             plt.title(str(data_name[i]) + " C4烯烃选择性与温度的关系", fontsize=10)
+            plt.show()
         elif i < 16:
             clf.fit(np.array(temperatures_6to16).reshape(-1, 1), np.array(all_eth[i]).reshape(-1, 1))
             y_pre = clf.predict(predict_data)
-            plt.subplot(5, 5, i + 1)
+            # plt.subplot(5, 5, i + 1)
             plt.scatter(temperatures_6to16, all_eth[i], c='red')
             plt.plot(predict_data, y_pre, c='blue')
             plt.xlabel("温度", fontsize=10)
             plt.ylabel("乙醇转化率", fontsize=10)
             plt.title(str(data_name[i]) + " C4烯烃选择性与温度的关系", fontsize=10)
+            plt.show()
         elif i < 21:
             clf.fit(np.array(temperatures_17to21).reshape(-1, 1), np.array(all_eth[i]).reshape(-1, 1))
             y_pre = clf.predict(predict_data)
-            plt.subplot(5, 5, i + 1)
+            # plt.subplot(5, 5, i + 1)
             plt.scatter(temperatures_17to21, all_eth[i], c='red')
             plt.plot(predict_data, y_pre, c='blue')
             plt.xlabel("温度", fontsize=10)
             plt.ylabel("乙醇转化率", fontsize=10)
             plt.title(str(data_name[i]) + " C4烯烃选择性与温度的关系", fontsize=10)
-    plt.show()
+            plt.show()
 
 
 def main():
