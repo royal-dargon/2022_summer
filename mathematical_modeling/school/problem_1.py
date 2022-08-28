@@ -59,7 +59,7 @@ def my_cluster(data):
     # clustering = AgglomerativeClustering(n_clusters=15).fit(x)
     # clustering = KMeans(n_clusters=8).fit(x)
     # clustering = AffinityPropagation(random_state=2).fit(x)
-    clustering = SpectralClustering().fit(x)
+    clustering = SpectralClustering(n_clusters=5).fit(x)
     labels = clustering.labels_
     labels_set = set(labels)
     number_labels = [[] for _ in range(len(labels_set))]
@@ -167,6 +167,7 @@ def get_mix(x_data, point):
         i_ter += 1
         if i_ter > 50:
             break
+    print(parameters)
     return parameters
 
 
@@ -182,13 +183,14 @@ def get_mix_parameters(count, point):
 
 
 def main():
-    data = get_data("data/data1.csv")
-    labels = my_cluster(data)
+    data_real = get_data("data/real_data1.csv")
+    data1 = get_data("data/data1.csv")
+    labels = my_cluster(data1)
     # print(labels[15][0])
     # print(data[624])
     x_data = []
     # data = np.log10(data + 0.01)
-    data = data_format(data)
+    data = data_format(data1)
     for i in range(len(labels)):
         x = []
         for n in range(len(labels[i])):
@@ -198,16 +200,28 @@ def main():
     points = np.log10(1.01)
     label_parameters = []
     print(x_data[0].shape)
-    for i in range(1):
+    for i in range(len(x_data)):
         res = get_mix_parameters(x_data[i], points)
         label_parameters.append(res)
     print(len(label_parameters))
-    for i in range(1):
-        print(labels[i])
-        print(x_data[i][0, :17])
-        for n in range(x_data[i].shape[1] - 2200):
+    sum_num = 0
+    correct = 0
+    for i in range(len(x_data)):
+        # print(labels[i])
+        # print(x_data[i][0, :17])
+        for n in range(x_data[i].shape[1]):
             d = calculate_w(x_data[i][:, n], label_parameters[i][n])
-            print(d)
+            m = np.mean(d)
+            print(m, "m")
+            for j, p in enumerate(d):
+                if data1[labels[i][j]][n] == 0:
+                    if p > m and data_real[labels[i][j]][n] != 0:
+                        correct += 1
+                        sum_num += 1
+                    elif p < m and data_real[labels[i][j]][n] != 0:
+                        sum_num += 1
+    print(correct, sum_num, "res")
+    print(correct/sum_num)
 
 
 if __name__ == "__main__":
